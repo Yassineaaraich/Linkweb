@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MoVIELINK</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+:root {
+  --primary-color: #000000;
+  --secondary-color: #2E3A46;
+  --gradient: linear-gradient(135deg, #000000 0%, #000000 100%);
+  --shadow: 0 4px 15px rgba(0, 0, 0, 1);
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", sans-serif;
+  background: #000000;
+  height: 500px;
+}
+
+/* الشريط العلوي */
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--gradient);
+  color: white;
+  background: #7F3CFA;
+  padding: 12px 18px;
+  box-shadow: var(--shadow);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: rgba(255,255,255,0.3);
+}
+
+.brand h1 {
+  font-size: 1.2rem;
+  margin: 0;
+  font-weight: bold;
+}
+
+.topbar-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.slider-btn, .add-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.6rem;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.slider-btn:hover, .add-btn:hover {
+  transform: scale(1.1);
+}
+
+/* القائمة الجانبية */
+.sidebar {
+  position: fixed;
+  top: 0;
+  right: -260px;
+  width: 250px;
+  height: 100%;
+  background: #1b1f2a;
+  box-shadow: -2px 0 8px rgba(0,0,0,0.3);
+  transition: right 0.3s ease;
+  z-index: 999;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.sidebar.active {
+  right: 0;
+}
+
+.sidebar .close-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  align-self: flex-end;
+  cursor: pointer;
+}
+
+.sidebar .nav-btn {
+  background: rgba(255,255,255,0.1);
+  border: none;
+  color: white;
+  padding: 5px;
+  border-radius: 8px;
+  text-align: right;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s;
+  text-decoration: none;
+  display: block;
+}
+
+.sidebar .nav-btn:hover {
+  background: rgba(255,255,255,0.2);
+}
+
+/* نافذة إضافة موقع */
+.add-site-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 2000;
+  justify-content: center;
+  align-items: center;
+}
+
+.add-site-modal.active {
+  display: flex;
+}
+
+.add-site-content {
+  background: #1b1f2a;
+  padding: 25px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
+  color: white;
+}
+
+.add-site-content h2 {
+  margin-top: 0;
+  text-align: center;
+  color: white;
+}
+
+.add-site-content input {
+  width: 100%;
+  padding: 12px;
+  margin: 15px 0;
+  border: 1px solid #7F3CFA;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+.add-site-content input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.add-site-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.add-site-buttons button {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.add-site-buttons .add-btn-confirm {
+  background: #7F3CFA;
+  color: white;
+}
+
+.add-site-buttons .add-btn-cancel {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.add-site-buttons button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* iframe */
+iframe {
+  width: 100%;
+  height: calc(100vh - 60px);
+  border: none;
+}
+
+/* متجاوب */
+@media (max-width: 768px) {
+  .brand h1 {
+    font-size: 1rem;
+  }
+  .sidebar {
+    width: 220px;
+  }
+}
+    
+body {
+  margin: 0;
+  font-family: "Segoe UI", sans-serif;
+  background: #f5f7fa;
+}
+
+header {
+  background: var(--gradient);
+  color: white;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: var(--shadow);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.logo {
+  width: 60px;
+  height: 60px;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.8rem;
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.site-name {
+  font-size: 2rem;
+  font-weight: 800;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.nav-buttons {
+  display: flex;
+  gap: 15px;
+}
+
+.nav-btn {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 30px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.nav-btn:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* تصميم الصفحة الرئيسية */
+.home-page {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  background: #000000;
+}
+
+.page-title {
+  text-align: center;
+  margin: 2rem 0 3rem;
+  color: var(--secondary-color);
+  font-size: 2.5rem;
+  position: relative;
+}
+
+.page-title:after {
+  content: '';
+  display: block;
+  width: 100px;
+  height: 5px;
+  background: var(--gradient);
+  margin: 15px auto;
+  border-radius: 5px;
+}
+
+.sites-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+  gap: 25px;
+}
+
+.site-card {
+  background-color: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+  height: 150px;
+}
+
+.site-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 0px 5px rgba(0, 0, 0, 0.15);
+}
+
+.site-card:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 10px;
+  height: 5px;
+  background: var(--gradient);
+}
+
+.site-image {
+  width: 100%;
+  height: 100px;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.site-card:hover .site-image {
+  transform: scale(1.05);
+}
+
+.site-info {
+  padding: 20px;
+}
+
+.site-name {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--secondary-color);
+}
+
+.site-url {
+  color: #7f8c8d;
+  font-size: 0.9rem;
+  word-break: break-all;
+  margin-bottom: 15px;
+}
+
+.site-description {
+  color: #5d6d7e;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* تصميم صفحة عرض الموقع */
+.site-page {
+  display: none;
+  height: 100vh;
+  flex-direction: column;
+}
+
+.site-header {
+  background: var(--gradient);
+  color: #00000000;
+  padding: 0px 0px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: var(--shadow);
+}
+
+.loading {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--gradient);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+  color: white;
+}
+
+/* إشعار حجب الإعلانات */
+.ad-blocked-notification {
+  display: none;
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #e74c3c;
+  color: white;
+  padding: 15px 25px;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  z-index: 1500;
+  text-align: center;
+  max-width: 90%;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- الشريط العلوي -->
+<header class="topbar">
+  <div class="brand">
+    <img src="logo.png" alt="Logo">
+    <h1>Linkweb</h1>
+  </div>
+  <div class="topbar-buttons">
+    <button id="addSite" class="add-btn"><i class="fas fa-plus"></i></button>
+    <button id="openSlider" class="slider-btn"><i class="fas fa-bars"></i></button>
+  </div>
+</header>
+
+<!-- القائمة الجانبية -->
+<aside id="sidebar" class="sidebar">
+  <button id="closeSlider" class="close-btn">&times;</button>
+  <a href="index.html" class="nav-btn"> Home</a>
+</aside>
+
+<!-- نافذة إضافة موقع -->
+<div id="addSiteModal" class="add-site-modal">
+  <div class="add-site-content">
+    <h2>إضافة موقع جديد</h2>
+    <input type="text" id="siteUrlInput" placeholder="أدخل رابط الموقع (مثال: https://example.com)">
+    <div class="add-site-buttons">
+      <button id="addSiteConfirm" class="add-btn-confirm">إضافة</button>
+      <button id="addSiteCancel" class="add-btn-cancel">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<div id="home-page" class="home-page">
+  <header>
+    <!-- السلايدر -->
+    <div class="slider-container">
+      <div class="slider" id="slider">
+        <div class="slide">
+          <div class="slide-content">
+            <!--h2 class="slide-title">استكشف أفضل المواقع</h2>
+            <p class="slide-description">تصفح مجموعة مختارة من أفضل المواقع الإلكترونية في مختلف المجالات. استمتع بتجربة تصفح آمنة وخالية من الإعلانات المزعجة.</p>
+            <button class="nav-btn"><i class="fas fa-play"></i> ابدأ الاستكشاف</button-->
+          </div>
+          <!--div class="slide-image">
+            <img src="https://cdn.pixabay.com/photo/2019/07/14/16/27/pen-4337521_1280.jpg" alt="استكشف المواقع">
+          </div-->
+        </div>
+        <div class="slide">
+          <!--div class="slide-content">
+            <h2 class="slide-title">تصفح آمن</h2>
+            <p class="slide-description">نحميك من الإعلانات المنبثقة والروابط الضارة. استمتع بتجربة تصفح نظيفة وآمنة لجميع المواقع المفضلة لديك.</p>
+            <button class="nav-btn"><i class="fas fa-shield-alt"></i> تعرف على المزيد</button>
+          </div>
+          <div class="slide-image">
+            <img src="https://cdn.pixabay.com/photo/2021/08/04/13/06/cyber-security-6521593_1280.jpg" alt="تصفح آمن">
+          </div-->
+        </div>
+        <!--div class="slide"-->
+        <div class="slide-content">
+          <!--h2 class="slide-title">واجهة مستخدم رائعة</h2>
+          <p class="slide-description">تصميم حديث وجذاب يسهل عليك العثور على ما تبحث عنه. تجربة مستخدم متميزة على جميع الأجهزة.</p>
+          <button class="nav-btn"><i class="fas fa-desktop"></i> جرب الواجهة</button>
+        </div>
+        <div class="slide-image">
+          <img src="https://cdn.pixabay.com/photo/2020/05/18/16/17/social-media-5187243_1280.png" alt="واجهة مستخدم">
+        </div-->
+      </div>
+    </div>
+    
+    <div id="prev-slide"></div>
+    <div id="next-slide"></div>
+    
+    <div id="slider-nav">
+      <div class="slider-dot active"></div>
+      <div class="slider-dot"></div>
+      <div class="slider-dot"></div>
+    </div>
+  </div>
+  
+  <div class="sites-list" id="sites-list">
+    <!-- سيتم ملء هذه القائمة ديناميكيًا -->
+  </div>
+</div>
+
+<!-- صفحة عرض الموقع -->
+<div id="site-page" class="site-page">
+  <div class="site-header">
+    <button class="back-btn" id="back-btn"></button>
+    <div id="current-site-name"></div>
+  </div>
+  <div>
+    <div class="loading" id="loading">
+      <div class="spinner"></div>
+      <p>جاري تحميل الموقع...</p>
+    </div>
+    <iframe
+      id="site-frame"
+      sandbox="allow-same-origin allow-scripts allow-fullscreen"
+      allow="fullscreen"
+      allowfullscreen>
+    </iframe>
+  </div>
+</div>
+
+<!-- إشعار حجب الإعلانات -->
+<div class="ad-blocked-notification" id="ad-blocked-notification">
+  <p>تم حظر الإعلان أو الرابط الخارجي لحماية خصوصيتك</p>
+</div>
+
+<script>
+// بيانات المواقع الافتراضية
+const sitesData = {
+  sites: [
+    {
+      site_url: "https://example.com",
+      image_url: "https://via.placeholder.com/300x200",
+      description: "موقع مثال"
+    },
+    {
+      site_url: "https://google.com",
+      image_url: "https://via.placeholder.com/300x200",
+      description: "محرك البحث جوجل"
+    }
+  ]
+};
+
+// التحكم في القائمة الجانبية
+const sidebar = document.getElementById('sidebar');
+document.getElementById('openSlider').onclick = () => sidebar.classList.add('active');
+document.getElementById('closeSlider').onclick = () => sidebar.classList.remove('active');
+
+// التحكم في نافذة إضافة الموقع
+const addSiteModal = document.getElementById('addSiteModal');
+const siteUrlInput = document.getElementById('siteUrlInput');
+
+document.getElementById('addSite').onclick = () => {
+  addSiteModal.classList.add('active');
+  siteUrlInput.value = '';
+  siteUrlInput.focus();
+};
+
+document.getElementById('addSiteCancel').onclick = () => {
+  addSiteModal.classList.remove('active');
+};
+
+document.getElementById('addSiteConfirm').onclick = () => {
+  const url = siteUrlInput.value.trim();
+  if (url) {
+    // التحقق من صحة الرابط
+    let validUrl = url;
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+      validUrl = 'https://' + url;
+    }
+    
+    // إضافة الموقع إلى القائمة
+    const siteName = getSiteName(validUrl);
+    const newSite = {
+      site_url: validUrl,
+      image_url: "https://via.placeholder.com/300x200",
+      description: "موقع مضافة يدوياً"
+    };
+    
+    sitesData.sites.push(newSite);
+    displaySites();
+    addSiteModal.classList.remove('active');
+    
+    // فتح الموقع مباشرة بعد إضافته
+    openSite(validUrl, siteName);
+  }
+};
+
+// إغلاق النافذة عند النقر خارجها
+addSiteModal.addEventListener('click', (e) => {
+  if (e.target === addSiteModal) {
+    addSiteModal.classList.remove('active');
+  }
+});
+
+// العناصر الرئيسية
+const homePage = document.getElementById('home-page');
+const sitePage = document.getElementById('site-page');
+const sitesList = document.getElementById('sites-list');
+const siteFrame = document.getElementById('site-frame');
+const backBtn = document.getElementById('back-btn');
+const currentSiteName = document.getElementById('current-site-name');
+const loading = document.getElementById('loading');
+const adBlockedNotification = document.getElementById('ad-blocked-notification');
+
+// المتغيرات العامة
+let currentDomain = '';
+let adBlockerInterval = null;
+
+// استخراج اسم الموقع من الرابط
+function getSiteName(url) {
+  try {
+    const domain = new URL(url).hostname;
+    return domain.replace('www.', '').split('.')[0];
+  } catch (e) {
+    return url.split('/')[2] || url;
+  }
+}
+
+// استخراج النطاق الأساسي من الرابط
+function getBaseDomain(url) {
+  try {
+    const urlObj = new URL(url);
+    return urlObj.hostname;
+  } catch (e) {
+    return url.split('/')[2] || url;
+  }
+}
+
+// التحقق مما إذا كان الرابط ينتمي للنطاق الأساسي
+function isSameDomain(url) {
+  try {
+    const urlObj = new URL(url, `https://${currentDomain}`);
+    return urlObj.hostname === currentDomain || 
+           urlObj.hostname.endsWith('.' + currentDomain);
+  } catch (e) {
+    return false;
+  }
+}
+
+// منع الإعلانات والروابط الخارجية
+function setupAdBlocker() {
+  // إعادة تعيين المراقبة السابقة
+  if (adBlockerInterval) {
+    clearInterval(adBlockerInterval);
+  }
+  
+  // مراقبة الروابط باستمرار
+  adBlockerInterval = setInterval(() => {
+    try {
+      const iframeDoc = siteFrame.contentDocument || siteFrame.contentWindow.document;
+      
+      // مراقبة جميع الروابط
+      const allLinks = iframeDoc.querySelectorAll('a');
+      allLinks.forEach(link => {
+        const href = link.getAttribute('href');
+        if (href && !isSameDomain(href)) {
+          link.addEventListener('click', (e) => {
+            e.preventDefault();
+            showAdBlockedNotification();
+            return false;
+          });
+          
+          // إزالة السمة href لمنع النقر
+          link.setAttribute('data-original-href', href);
+          link.removeAttribute('href');
+          link.style.cursor = 'not-allowed';
+          link.style.opacity = '0.7';
+        }
+      });
+      
+      // مراقبة النماذج
+      const allForms = iframeDoc.querySelectorAll('form');
+      allForms.forEach(form => {
+        const action = form.getAttribute('action');
+        if (action && !isSameDomain(action)) {
+          form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            showAdBlockedNotification();
+            return false;
+          });
+        }
+      });
+      
+      // منع فتح النوافذ المنبثقة
+      siteFrame.contentWindow.open = function() {
+        showAdBlockedNotification();
+        return null;
+      };
+      
+    } catch (e) {
+      // لا يمكن الوصول إلى محتوى iframe بسبب سياسة CORS
+    }
+  }, 1000); // التحقق كل ثانية
+}
+
+// عرض إشعار حجب الإعلان
+function showAdBlockedNotification() {
+  adBlockedNotification.style.display = 'block';
+  setTimeout(() => {
+    adBlockedNotification.style.display = 'none';
+  }, 3000);
+}
+
+// عرض قائمة المواقع
+function displaySites() {
+  sitesList.innerHTML = '';
+  
+  sitesData.sites.forEach(site => {
+    const siteName = getSiteName(site.site_url);
+    
+    const siteCard = document.createElement('div');
+    siteCard.className = 'site-card';
+    siteCard.innerHTML = `
+      <img src="${site.image_url}" alt="${siteName}" class="site-image">
+      <div class="site-info">
+        <div class="site-name">${siteName}</div>
+        <div class="site-url">${site.site_url}</div>
+        <p class="site-description">${site.description || 'موقع لمشاهدة المحتوى الرقمي المتنوع.'}</p>
+      </div>
+    `;
+    
+    siteCard.addEventListener('click', () => {
+      openSite(site.site_url, siteName);
+    });
+    
+    sitesList.appendChild(siteCard);
+  });
+}
+
+// فتح الموقع في iframe
+function openSite(url, name) {
+  homePage.style.display = 'none';
+  sitePage.style.display = 'flex';
+  currentSiteName.textContent = name;
+  
+  // تعيين النطاق الحالي
+  currentDomain = getBaseDomain(url);
+  
+  loading.style.display = 'flex';
+  siteFrame.src = url;
+  
+  // إعداد مانع الإعلانات بعد تحميل الصفحة
+  siteFrame.onload = function() {
+    loading.style.display = 'none';
+    setupAdBlocker();
+    
+    // محاولة منع النوافذ المنبثقة
+    try {
+      const iframeWindow = siteFrame.contentWindow;
+      iframeWindow.open = function() {
+        showAdBlockedNotification();
+        return null;
+      };
+    } catch (e) {
+      // لا يمكن الوصول إلى نافذة iframe بسبب سياسة CORS
+    }
+  };
+}
+
+// العودة إلى الصفحة الرئيسية
+backBtn.addEventListener('click', () => {
+  sitePage.style.display = 'none';
+  homePage.style.display = 'block';
+  siteFrame.src = '';
+  
+  // إيقاف مراقبة الإعلانات
+  if (adBlockerInterval) {
+    clearInterval(adBlockerInterval);
+    adBlockerInterval = null;
+  }
+});
+
+// تهيئة التطبيق
+document.addEventListener('DOMContentLoaded', () => {
+  displaySites();
+});
+</script>
+
+</body>
+</html>
